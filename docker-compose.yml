@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api-server:
+    build: ./api-server
+    container_name: llm-api-server
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - API_KEY=bullzy-34f6c205-2f46-42c2-ae38-d3c9c460e55e,bullzy-6a9db0b2-3c01-4e24-8cf5-b720da5469ab,bullzy-7f939c77-d462-4d5a-8979-3b253c7271de,bullzy-d9c7e67f-9b28-4237-baff-b9e5fcb23e01,bullzy-550c93f0-8890-4b6b-bb84-9c3d279d8f91,bullzy-a4cb0277-3ee2-4a3b-91a4-fba94d2ce0ab,bullzy-e87ed7aa-58f7-4e2b-bb35-9f56c5a5e2e9,bullzy-c1208d4b-7f65-442f-8e35-13732c66465b,bullzy-82eb6e87-e7b5-469f-826c-3b87b647f25f,bullzy-b9e2e6cf-5f78-42f5-9cc0-589416d06b5c,bullzy-6491a36f-4063-4e2f-a9f6-96b8c166aa89,bullzy-2f6a8e6a-fd0f-4f7a-bbd5-137cb2d77958,bullzy-b0426e0c-d7fd-4132-a6e2-e0886dc05c11,bullzy-cb43b307-b7bb-4714-bca2-48ad4ae60726,bullzy-47a4f02a-6c86-4ee7-8ea4-f4aa7493733f,bullzy-790fa27d-c682-4f2d-b1b3-95fdf1046eb6,bullzy-d0d287be-f3be-404f-9d58-001e91e2ae67,bullzy-911a95db-0e7d-4c4a-8542-9c5c59ec8baf,bullzy-e5cd7ac1-8a75-4172-a4de-0ae68d96c5f7,bullzy-0c07dcdf-f569-4641-9c15-511dc4fa47e3
+      - ADMIN_KEY=bullzy-admin-7f8e3d39-9c7b-4a82-81e4-72f6c90a84f6
+      - ollama_url=http://ollama:11434/api
+      - llmModel=smollm:360m
+      - redis_host=redis
+      - redis_port=6379
+      - rate_limit_per_exp_sec=2
+      - redis_key_exp_sec=10
+    depends_on:
+      - redis
+      - ollama
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    mem_limit: 12g
+
+volumes:
+  ollama-models:
